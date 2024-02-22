@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">384149376411</string>
+    <string name="google_api_key" translatable="false">AIzaSyBdz56YKPa8IlCoCUvcOdunuTsnZ-5h8yY</string>
+    <string name="google_app_id" translatable="false">1:384149376411:android:1fc27295a028fcca51a53e</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBdz56YKPa8IlCoCUvcOdunuTsnZ-5h8yY</string>
+    <string name="google_storage_bucket" translatable="false">mapdirection-compose.appspot.com</string>
+    <string name="project_id" translatable="false">mapdirection-compose</string>
+</resources>
