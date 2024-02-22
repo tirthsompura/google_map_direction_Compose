@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Google Map Direction</string>
+    <string name="MAPS_API_KEY">AIzaSyDQbfE-X9JfiLD5DXkPkLGFTbDduAY5SNk</string>
+    <string name="galleryRequestPermissionDialogTitle">App Would Like to Access Your Location</string>
+    <string name="galleryRequestPermissionDialogBody">App needs access to your location to show the events nearby you</string>
+    <string name="galleryDeniedPermissionDialogTitle">App requires access to your Location</string>
+    <string name="galleryDeniedPermissionDialogBody">You can enable this permission in the setting</string>
+    <string name="openSettings">Settings</string>
+    <string name="signup">SignUp</string>
+    <string name="don_t_have_an_account">"Don't have an account? "</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="login_your_account">Login your Account</string>
+    <string name="hey_there">Hey, there</string>
+    <string name="place_order">Place order</string>
+    <string name="failed_to_create_an_account">Failed to create an account.</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="already_have_an_account">"Already have an account? "</string>
+    <string name="please_enter_user_type_user_employee">Please enter user type user/employee</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="create_an_account">Create an Account</string>
+</resources>
