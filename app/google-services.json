@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "384149376411",
+    "project_id": "mapdirection-compose",
+    "storage_bucket": "mapdirection-compose.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384149376411:android:1fc27295a028fcca51a53e",
+        "android_client_info": {
+          "package_name": "com.example.googlemapdirection"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdz56YKPa8IlCoCUvcOdunuTsnZ-5h8yY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
