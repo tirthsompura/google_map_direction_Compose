@@ -89,11 +89,17 @@ fun HomeScreen(
                 )
             }
 
-            viewModel.data.value.forEach { (key, value) ->
+               viewModel.data.value.forEach { (key, value) ->
                 if (key == FirebaseKeyConstants.Request && value == FirebaseKeyConstants.AcceptReq) {
                     viewModel.updateDocumentEmployeeDetails(
                         "JFhEqMwqRZm9RGX9xuJc", updatedLocation
                     )
+                }else if(key == FirebaseKeyConstants.Request && value == FirebaseKeyConstants.SentRequest){
+                    if(sessionManagerClass.loginUserData?.userType == USER){
+                        viewModel.updateDocumentEmployeeDetails(
+                            "JFhEqMwqRZm9RGX9xuJc", updatedLocation
+                        )
+                    }
                 }
             }
 
