@@ -31,8 +31,10 @@ import com.example.googlemapdirection.utils.FirebaseKeyConstants.EMP_LAT
 import com.example.googlemapdirection.utils.FirebaseKeyConstants.EMP_LONG
 import com.example.googlemapdirection.utils.FirebaseKeyConstants.EMP_NAME
 import com.example.googlemapdirection.utils.FirebaseKeyConstants.USER
+import com.example.googlemapdirection.utils.FirebaseKeyConstants.USER_ID
 import com.example.googlemapdirection.utils.FirebaseKeyConstants.USER_LET
 import com.example.googlemapdirection.utils.FirebaseKeyConstants.USER_LONG
+import com.example.googlemapdirection.utils.FirebaseKeyConstants.USER_NAME
 import com.example.googlemapdirection.utils.SessionManagerClass
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseUser
@@ -89,7 +91,7 @@ fun HomeScreen(
                 )
             }
 
-               viewModel.data.value.forEach { (key, value) ->
+            viewModel.data.value.forEach { (key, value) ->
                 if (key == FirebaseKeyConstants.Request && value == FirebaseKeyConstants.AcceptReq) {
                     viewModel.updateDocumentEmployeeDetails(
                         "JFhEqMwqRZm9RGX9xuJc", updatedLocation
@@ -126,6 +128,10 @@ fun HomeScreen(
                         EMP_LONG to "",
                         EMP_NAME to "",
                         EMP_ID to "",
+                        USER_ID to "",
+                        USER_LET to "",
+                        USER_LONG to "",
+                        USER_NAME to "",
                     )
                 )
                 navController.navigate(AuthenticationScreens.LoginScreen.route)
