@@ -1,8 +1,10 @@
-package com.example.googlemapdirection.screens
+package com.example.firebasechatdemo.screens
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.util.Log
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,34 +26,37 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.googlemapdirection.screens.common.SpacerHorizontal
-import com.example.googlemapdirection.R
-import com.example.googlemapdirection.screens.home.HomeViewModel
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.AcceptReq
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.DeclineReq
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.DefaultReq
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.EMP_ID
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.EMP_LAT
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.EMP_LONG
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.EMP_NAME
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.Request
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.SentRequest
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.USER
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.USER_ID
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.USER_LET
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.USER_LONG
-import com.example.googlemapdirection.utils.FirebaseKeyConstants.USER_NAME
-import com.example.googlemapdirection.utils.bitmapDescriptor
-import com.example.googlemapdirection.utils.capitaliseIt
+import com.example.firebasechatdemo.R
+import com.example.firebasechatdemo.screens.common.SpacerHorizontal
+import com.example.firebasechatdemo.screens.home.HomeViewModel
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.AcceptReq
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.DeclineReq
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.DefaultReq
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.EMP_ID
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.EMP_LAT
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.EMP_LONG
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.EMP_NAME
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.Request
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.SentRequest
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.USER
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.USER_ID
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.USER_LET
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.USER_LONG
+import com.example.firebasechatdemo.utils.FirebaseKeyConstants.USER_NAME
+import com.example.firebasechatdemo.utils.bitmapDescriptor
+import com.example.firebasechatdemo.utils.capitaliseIt
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -93,8 +98,7 @@ fun MyMap(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        GoogleMap(
-            modifier = Modifier.matchParentSize(),
+        GoogleMap(modifier = Modifier.matchParentSize(),
             cameraPositionState = cameraPositionState,
             properties = mapProperties.copy(isMyLocationEnabled = isDefaultLocation.value),
             onMapClick = {
@@ -103,8 +107,7 @@ fun MyMap(
                         latLongList.add(it)
                     }
                 }
-            }
-        ) {
+            }) {
             val height = 100
             val width = 100
             val b = context.resources.getDrawable(R.drawable.car) as (BitmapDrawable)
@@ -131,11 +134,9 @@ fun MyMap(
                     val employeeLongKey = EMP_LONG
                     val empLongData = viewModel.data.value[employeeLongKey]
 
-                    latLongDataEmp.value =
-                        LatLng(
-                            empLatData.toString().toDouble(),
-                            empLongData.toString().toDouble()
-                        )
+                    latLongDataEmp.value = LatLng(
+                        empLatData.toString().toDouble(), empLongData.toString().toDouble()
+                    )
 
                     Marker(
                         state = MarkerState(position = latLongDataEmp.value),
@@ -150,11 +151,9 @@ fun MyMap(
                     val userLongKey = USER_LONG
                     val userLongData = viewModel.data.value[userLongKey]
 
-                    latLongDataUser.value =
-                        LatLng(
-                            userLatData.toString().toDouble(),
-                            userLongData.toString().toDouble()
-                        )
+                    latLongDataUser.value = LatLng(
+                        userLatData.toString().toDouble(), userLongData.toString().toDouble()
+                    )
 
                     Marker(
                         state = MarkerState(position = latLongDataUser.value),
@@ -168,39 +167,34 @@ fun MyMap(
 
             viewModel.data.value.forEach { (key, value) ->
                 if (key == Request && value == AcceptReq) {
-                    LaunchedEffect(Unit) {
-                        viewModel.getRoutePoints()
+                    if ((latLongDataEmp.value.latitude != 0.0) && (latLongDataUser.value.latitude != 0.0)) {
+                        LaunchedEffect(Unit) {
+                            viewModel.getRoutePoints()
+                        }
                     }
                 }
             }
-
             viewModel.data.value.forEach { (key, value) ->
                 if (key == Request && value == AcceptReq) {
-//                    if (viewModel.polyLineUpdated.value) {
-                    Polyline(
-                        points = viewModel.polylineOptions.points,
-                        onClick = {},
-                        color = Color.Blue
-                    )
-//                }
+                    if (viewModel.polyLineUpdated.value) {
+                        Polyline(
+                            points = viewModel.polylineOptions.points,
+                            onClick = {},
+                            color = Color.Blue
+                        )
+                    }
+                }
             }
         }
-    }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 4.dp)
-    ) {
-        Spacer(modifier = Modifier.width(4.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 4.dp, horizontal = 4.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(0.1f)
+            Box(
+                modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopStart
             ) {
                 Button(onClick = { mapTypeMenuExpanded = true }) {
                     Text(text = mapTypeMenuSelectedText)
@@ -210,8 +204,7 @@ fun MyMap(
                         modifier = Modifier.size(ButtonDefaults.IconSize)
                     )
                 }
-                DropdownMenu(
-                    expanded = mapTypeMenuExpanded,
+                DropdownMenu(expanded = mapTypeMenuExpanded,
                     onDismissRequest = { mapTypeMenuExpanded = false }) {
                     MapType.entries.forEach {
                         val mapType = it.name.capitaliseIt()
@@ -225,15 +218,15 @@ fun MyMap(
                     }
                 }
             }
-            SpacerHorizontal(60.dp)
-            if (viewModel.sessionManagerClass.loginUserData?.userType == USER) {
-                if (viewModel.showMap.value) {
-                    Button(
-                        modifier = Modifier,
-                        onClick = {
+            Box(
+                modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomStart
+            ) {
+                if (viewModel.sessionManagerClass.loginUserData?.userType == USER) {
+                    if (viewModel.showMap.value) {
+                        Button(modifier = Modifier, onClick = {
                             //Update Data
                             viewModel.updateDocumentEmployeeDetails(
-                                "JFhEqMwqRZm9RGX9xuJc", mapOf(
+                                "BziCbK8VC8OwYBcRMq9A", mapOf(
                                     Request to SentRequest,
                                     USER_LET to viewModel.userCurrentLat.value,
                                     USER_LONG to viewModel.userCurrentLong.value,
@@ -241,19 +234,16 @@ fun MyMap(
                                     USER_ID to viewModel.sessionManagerClass.loginUserData?.userId.toString(),
                                 )
                             )
+                        }) {
+                            Text(text = stringResource(R.string.send_request))
                         }
-                    ) {
-                        Text(text = stringResource(R.string.place_order))
                     }
-                }
-            } else {
-                viewModel.data.value.forEach { (key, value) ->
-                    if (key == Request && value == AcceptReq) {
-                        Button(
-                            modifier = Modifier,
-                            onClick = {
+                } else {
+                    viewModel.data.value.forEach { (key, value) ->
+                        if (key == Request && value == AcceptReq) {
+                            Button(modifier = Modifier, onClick = {
                                 viewModel.updateDocumentEmployeeDetails(
-                                    "JFhEqMwqRZm9RGX9xuJc", mapOf(
+                                    "BziCbK8VC8OwYBcRMq9A", mapOf(
                                         Request to DefaultReq,
                                         USER_LET to "",
                                         USER_LONG to "",
@@ -265,14 +255,13 @@ fun MyMap(
                                         EMP_LONG to "",
                                     )
                                 )
+                            }) {
+                                Text(text = "Complete Ride")
                             }
-                        ) {
-                            Text(text = "Complete")
                         }
                     }
                 }
             }
         }
     }
-}
 }
