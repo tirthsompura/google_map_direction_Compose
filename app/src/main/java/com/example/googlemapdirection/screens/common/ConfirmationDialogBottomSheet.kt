@@ -1,10 +1,9 @@
 package com.example.googlemapdirection.screens.common
 
+import android.os.Build
 import android.view.Gravity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,35 +16,43 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
 import com.example.googlemapdirection.R
-import com.example.googlemapdirection.ui.theme.customPrimaryColor
+import com.example.googlemapdirection.ui.theme.Purple40
 import com.example.googlemapdirection.ui.theme.fontRegular
 
 
 @Composable
 fun ConfirmationDialogBottomSheet(
+    userName: MutableState<String>,
+    address: String,
     title: String,
-    label: String,
-    icon: Painter,
     positiveButtonText: String = "Accept",
-    negativeButtonText: String = "Decline",
+    negativeButtonText: String = "Reject",
     positiveButtonTextStyle: TextStyle = fontRegular.copy(
         color = Color.White, fontSize = 18.sp,
         lineHeight = 24.sp,
@@ -56,9 +63,8 @@ fun ConfirmationDialogBottomSheet(
     ),
     onDismiss: () -> Unit, onAccept: () -> Unit
 ) {
-    val interactionSource = remember {
-        MutableInteractionSource()
-    }
+    val context = LocalContext.current
+
     Dialog(
         onDismissRequest = {
             onDismiss()
@@ -67,12 +73,13 @@ fun ConfirmationDialogBottomSheet(
         )
     ) {
         val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
-        dialogWindowProvider.window.setGravity(Gravity.BOTTOM)
+        dialogWindowProvider.window.setGravity(Gravity.CENTER)
         Card(
             modifier = Modifier
+                .padding(horizontal = 15.dp)
                 .fillMaxWidth()
-                .height(300.dp),
-            shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                .height(370.dp),
+            shape = RoundedCornerShape(20.dp),
             backgroundColor = Color.White
         ) {
             Column(
@@ -82,53 +89,96 @@ fun ConfirmationDialogBottomSheet(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+
+                Box(
+                    modifier = Modifier
+                        .size(75.dp)
+                        .clip(shape = CircleShape)
+                        .background(Purple40), contentAlignment = Alignment.Center
                 ) {
-                    CommonText(
-                        text = title,
-                        style = fontRegular.copy(fontSize = 18.sp, lineHeight = 24.sp)
-                    )
-                    Image(painter = painterResource(id = R.drawable.ic_cross_img_black),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clickable(
-                                interactionSource = interactionSource,
-                                indication = null,
-                                onClick = {
-                                    onDismiss()
-                                }
-                            )
+                    val imageLoader = ImageLoader.Builder(context)
+                        .components {
+                            if (Build.VERSION.SDK_INT >= 28) {
+                                add(ImageDecoderDecoder.Factory())
+                            } else {
+                                add(GifDecoder.Factory())
+                            }
+                        }
+                        .build()
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(context).data(data = R.drawable.ic_car_gif)
+                                .apply(block = {
+                                    size(150)
+                                }).build(),
+                            imageLoader = imageLoader
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
                 SpacerVertical(height = 10.dp)
-                Box(
-                    modifier = Modifier
-                        .size(72.dp)
-                        .clip(shape = CircleShape)
-                        .background(customPrimaryColor), contentAlignment = Alignment.Center
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Image(
-                        painter = icon,
-                        contentDescription = "",
-                        modifier = Modifier.size(36.dp),
-                        colorFilter = ColorFilter.tint(color = Color.White)
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                }
+                SpacerVertical(height = 10.dp)
+                Divider(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(Color.LightGray))
+                SpacerVertical(height = 10.dp)
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+                    Text(
+                        text = "Name: ",
+                        style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Normal,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Start,
+                        color = Color.Gray,
+                        modifier = Modifier.fillMaxWidth().weight(0.3f)
+                    )
+                    Text(
+                        text = userName.value,
+                        style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Start,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = Color.Black,
+                        modifier = Modifier.fillMaxWidth().weight(0.8f)
                     )
                 }
 
                 SpacerVertical(height = 10.dp)
-                CommonText(
-                    text = label,
-                    style = fontRegular.copy(fontSize = 18.sp, lineHeight = 24.sp),
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    maxLine = 2
-                )
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.Start) {
+                    Text(
+                        text = "Address: ",
+                        style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Normal,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Start,
+                        color = Color.Gray,
+                        modifier = Modifier.fillMaxWidth().weight(0.3f)
+                    )
+                    Text(
+                        text = address,
+                        style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Start,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        color = Color.Black,
+                        modifier = Modifier.fillMaxWidth().weight(0.8f)
+                    )
+                }
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize(),
