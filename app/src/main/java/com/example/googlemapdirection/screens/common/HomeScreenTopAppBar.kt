@@ -39,7 +39,7 @@ fun HomeScreenTopAppBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Hey ${session.loginUserData?.firstName}," + " You are a " + if (session.loginUserData?.userType == USER) "user and please place the ride." else "employee and please accept the ride.",
+                text = if (session.loginUserData?.userType == USER) "User" else "Driver",
                 style = fontRegular.copy(
                     fontSize = 16.sp,
                     color = Color.White
