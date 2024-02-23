@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Google Map Direction</string>
-    <string name="MAPS_API_KEY">AIzaSyDQbfE-X9JfiLD5DXkPkLGFTbDduAY5SNk</string>
     <string name="galleryRequestPermissionDialogTitle">App Would Like to Access Your Location</string>
     <string name="galleryRequestPermissionDialogBody">App needs access to your location to show the events nearby you</string>
     <string name="galleryDeniedPermissionDialogTitle">App requires access to your Location</string>
