@@ -12,7 +12,7 @@
     <string name="email">Email</string>
     <string name="login_your_account">Login your Account</string>
     <string name="hey_there">Hey, there</string>
-    <string name="place_order">Place order</string>
+    <string name="send_request">Send Request</string>
     <string name="failed_to_create_an_account">Failed to create an account.</string>
     <string name="sign_up">Sign Up</string>
     <string name="already_have_an_account">"Already have an account? "</string>
