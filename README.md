@@ -27,10 +27,6 @@ Note: You need to generate an API key at Google cloud platform also don't forget
 
 
 [Sharing Video for Google Map Direction](https://drive.google.com/file/d/1d_NKt2i9r6rGTALmFnf2XXT9SvH4jc9E/view?usp=sharing/),
-[Sharing Images (User Side)](https://drive.google.com/file/d/1ZkiHe3dAZ0e3GWAVv-mLsjibcfTub1Lb/view?usp=sharing/),
-[Sharing Images (Rider Side)](https://drive.google.com/file/d/1_LJS7yXji6oozWVQq0NX1_btMEr1Cx-y/view?usp=sharing/),
-[Sharing Images (Rider Side)](https://drive.google.com/file/d/1ZaPPA8ZqetlekYLVMOcyoxcYCiSunrOg/view?usp=sharing/),
-[Sharing Images (Rider Side)](https://drive.google.com/file/d/1H_7xsvu8CTVmQyqd4jNABH2YaxwwkF43/view?usp=sharing/),
 
 ![1708665221075](https://github.com/tirthsompura/google_map_direction_Compose/assets/36097066/77cca5bb-bd2f-4683-a20b-7f5759eeca7a))
 ![1708665220933](https://github.com/tirthsompura/google_map_direction_Compose/assets/36097066/058df2ff-7a2f-4a5f-8717-d8622b181ee1)
