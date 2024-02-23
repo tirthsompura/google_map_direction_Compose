@@ -141,9 +141,15 @@ class HomeViewModel @Inject constructor(
             userLatData.toString().toDouble()
         )
 
+         val dataCoordinate = if (sessionManagerClass.loginUserData?.userType == Users) {
+            listOf(userCoordinate, employeeCoordinate)
+        } else {
+            listOf(employeeCoordinate, userCoordinate)
+        }
+
         googleCoordinatesCall(
             CoordinatesRequest(
-                coordinates = listOf(userCoordinate, employeeCoordinate)
+                coordinates = dataCoordinate
             )
         )
     }
